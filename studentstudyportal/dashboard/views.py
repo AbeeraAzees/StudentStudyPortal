@@ -1,9 +1,7 @@
 from django.shortcuts import redirect, render
 from .forms import *
-from django.core.checks import messages
 from django.contrib import messages
 from django.views import generic
-import wikipedia
 import requests
 from django.contrib.auth.decorators import login_required
 
@@ -97,7 +95,6 @@ def books(request):
         result_list=[]
         for i in range(10):
             result_dict={
-                
                 'title':answer['items'][i]['volumeinfo']['title'],
                 'subtitle':answer['items'][i]['volumeInfo'].get('subtitle'),
                 'description':answer['items'][i]['volumeInfo'].get('description'),
@@ -106,9 +103,7 @@ def books(request):
                 'rating':answer['items'][i]['volumeInfo'].get('pageRating'),
                 'thumbnail':answer['items'][i]['volumeInfo'].get('imageLinks').get('thumbnail'),
                 'preview':answer['items'][i]['volumeInfo'].get('previewLink'),
-                
-                
-            }
+                }
            
             result_list.append(result_dict)
             context={
@@ -161,7 +156,7 @@ def wiki(request):
        if request.method=='POST':
            text=request.POST['text']
            form=DashboardFom(request.POST)
-           search=wikipedia.page(text)
+           search=wiki.page(text)
            context={
                 'form':form,
                 'title':search.title,
@@ -182,7 +177,7 @@ def register(request):
         if form.is_valid():
             form.save()
             username=form.cleaned_data.get('username')
-            messages.successs(request,f"Acccount created for{username}")
+            messages.success(request,f"Acccount created for{username}")
             return redirect("login")
     else:       
         form=UserRegistrationForm
